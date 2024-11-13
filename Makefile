@@ -23,7 +23,7 @@ stop:
 
 # Restart the services (rebuild and up)
 .PHONY: restart
-restart: stop build up
+restart: down build up
 
 # Remove all containers and networks defined in docker-compose.yml
 .PHONY: down

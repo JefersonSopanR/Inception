@@ -1,17 +1,6 @@
-version: '3'
+version: "3"
 
 services:
-  mariadb:
-    container_name: mariadb
-    build: requirements/mariadb
-    volumes:
-      - data_base:/var/lib/mysql
-    env_file:
-      - .env
-    restart: always
-    networks:
-      - inception
-
   wordpress:
     container_name: wordpress
     build: requirements/wordpress
@@ -38,6 +27,17 @@ services:
       - inception
     depends_on:
       - wordpress
+
+  mariadb:
+    container_name: mariadb
+    build: requirements/mariadb
+    volumes:
+      - data_base:/var/lib/mysql
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - inception
 
 volumes:
   data_base:
