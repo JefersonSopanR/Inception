@@ -17,7 +17,7 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 RUN mkdir /run/php
 
-COPY ./conf/wp-config.php /var/www/wordpress/wp-config.php
-RUN chmod +x /var/www/wordpress/wp-config.php
+COPY ./conf/wp_install.sh /var/www/wordpress/wp_install.sh
+RUN chmod +x /var/www/wordpress/wp_install.sh
 
-CMD ["bash", "/var/www/wordpress/wp-config.php"]
+CMD ["bash", "/var/www/wordpress/wp_install.sh"]

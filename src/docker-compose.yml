@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3'
 
 services:
   mariadb:
@@ -39,22 +39,20 @@ services:
     depends_on:
       - wordpress
 
-  volumes:
-    data_base:
-      name: data_base
-      driver: local
-      driver_opts:
-        type: none
-        device: /home/jesopan-/data/mysql
-        o: bind
-    wordpress_data:
-      name: wordpress_data
-      driver: local
-      driver_opts:
-        type: none
-        device: /home/jesopan-/data/wordpress
-        o: bind
-  
-  networks:
-    inception:
-      driver: bridge
+volumes:
+  data_base:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/jesopan-/data/mysql
+      o: bind
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/jesopan-/data/wordpress
+      o: bind
+
+networks:
+  inception:
+    driver: bridge

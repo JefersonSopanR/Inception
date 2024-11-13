@@ -1,8 +1,5 @@
-# Set environment variables from .env file
-include .env
-
 # Define variables
-DOCKER_COMPOSE = docker-compose -f docker-compose.yml
+DOCKER_COMPOSE = docker-compose -f src/docker-compose.yml --env-file src/.env
 PROJECT_NAME = inception
 
 # Default target to build and start the project
