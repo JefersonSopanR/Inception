@@ -5,8 +5,7 @@ services:
     container_name: mariadb
     build: ./requirements/mariadb
     restart: always
-    env_file:
-      - .env
+    env_file: .env
     volumes:
       - data_base:/var/lib/mysql
     networks:
@@ -15,8 +14,7 @@ services:
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
-    env_file:
-      - .env
+    env_file: .env
     volumes:
       - wordpress_data:/var/www/html/wordpress
     networks:
@@ -42,14 +40,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/jesopan-/data/data_base
       o: bind
+      device: /home/jesopan-/data/data_base
   wordpress_data:
     driver: local
     driver_opts:
       type: none
-      device: /home/jesopan-/data/wordpress_data
       o: bind
+      device: /home/jesopan-/data/wordpress_data
 
 networks:
   inception:
