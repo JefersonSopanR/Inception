@@ -1,11 +1,13 @@
 FROM debian:buster
 
+EXPOSE 9000
+
 # Install necessary packages
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y php7.3-fpm php7.3-mysql mariadb-client curl
 
 # Configure PHP-FPM for WordPress
-COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
 
 # Step to download and extract WordPress
 ADD https://wordpress.org/latest.tar.gz /var/www/latest.tar.gz
