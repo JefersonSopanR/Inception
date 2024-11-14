@@ -14,11 +14,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy custom MariaDB configuration
-COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+RUN rm /etc/mysql/mariadb.conf.d/50-server.cnf
+COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d
 
 # Copy initialization script
-COPY tools/mariadb.sh /mariadb.sh
-RUN chmod +x /mariadb.sh
+COPY tools/mariadb.sh /
+RUN bash /mariadb.sh
 
 # Set command to run the MariaDB entrypoint script
-CMD ["/mariadb.sh"]
+RUN rm -rf mariadb.sh
+CMD ["mysqld_safe"]

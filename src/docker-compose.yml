@@ -1,56 +1,54 @@
 version: "3"
 
 services:
-  wordpress:
-    container_name: wordpress
-    build: requirements/wordpress
-    volumes:
-      - wordpress_data:/var/www/html/wordpress
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    restart: always
     env_file:
       - .env
-    restart: always
+    volumes:
+      - data_base:/var/lib/mysql
+    networks:
+      - inception
+    
+  wordpress:
+    container_name: wordpress
+    build: ./requirements/wordpress
+    env_file:
+      - .env
+    volumes:
+      - wordpress_data:/var/www/html/wordpress
     networks:
       - inception
     depends_on:
       - mariadb
-
+    
   nginx:
     container_name: nginx
-    build: requirements/nginx
+    build: ./requirements/nginx
     hostname: localhost
-    ports:
-      - "443:443"
     volumes:
       - wordpress_data:/var/www/html/wordpress
-    restart: always
     networks:
       - inception
     depends_on:
       - wordpress
-
-  mariadb:
-    container_name: mariadb
-    build: requirements/mariadb
-    volumes:
-      - data_base:/var/lib/mysql
-    env_file:
-      - .env
-    restart: always
-    networks:
-      - inception
+    ports:
+      - "443:443"
 
 volumes:
   data_base:
     driver: local
     driver_opts:
       type: none
-      device: /home/jesopan-/data/mysql
+      device: /home/jesopan-/data/data_base
       o: bind
   wordpress_data:
     driver: local
     driver_opts:
       type: none
-      device: /home/jesopan-/data/wordpress
+      device: /home/jesopan-/data/wordpress_data
       o: bind
 
 networks:
