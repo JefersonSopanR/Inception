@@ -1,47 +1,26 @@
-# Define variables
-DOCKER_COMPOSE = docker-compose -f src/docker-compose.yml --env-file src/.env
-PROJECT_NAME = inception
+all: 
+	@sudo sh -c "echo '127.0.0.1 jesopan-.42.fr' >> /etc/hosts" && echo "successfully added jesopan-.42.fr to /etc/hosts"
+	sudo docker compose -f ./srcs/docker-compose.yml up -d
 
-# Default target to build and start the project
-.PHONY: all
-all: up
-
-# Build all services defined in docker-compose.yml
-.PHONY: build
-build:
-	$(DOCKER_COMPOSE) build
-
-# Start the containers in detached mode (background)
-.PHONY: up
-up:
-	$(DOCKER_COMPOSE) up -d
-
-# Stop the containers without removing them
-.PHONY: stop
-stop:
-	$(DOCKER_COMPOSE) stop
-
-# Restart the services (rebuild and up)
-.PHONY: restart
-restart: down build up
-
-# Remove all containers and networks defined in docker-compose.yml
-.PHONY: down
-down:
-	$(DOCKER_COMPOSE) down
-
-# Clean up Docker system resources (containers, networks, volumes)
-.PHONY: clean
 clean:
-	$(DOCKER_COMPOSE) down -v --rmi all
-	docker volume rm $(PROJECT_NAME)_data_base $(PROJECT_NAME)_wordpress_data || true
+	sudo docker compose -f ./srcs/docker-compose.yml down --rmi all -v
 
-# Show logs from all containers
-.PHONY: logs
-logs:
-	$(DOCKER_COMPOSE) logs -f
+fclean: clean
+	@sudo sed -i '/127.0.0.1 jesopan-.42.fr/d' /etc/hosts && echo "successfully removed jesopan-.42.fr from /etc/hosts"
+	@if [ -d "/home/jesopan-/data/wordpress_data" ]; then \
+		sudo rm -rf /home/jesopan-/data/wordpress_data/* && \
+		echo "successfully removed all contents from /home/jesopan-/data/wordpress_data"; \
+	fi;
 
-# Access a specific container's shell
-.PHONY: shell
-shell:
-	docker exec -it $(PROJECT_NAME)_nginx /bin/bash
+	@if [ -d "/home/jesopan-/data/data_base" ]; then \
+		sudo rm -rf /home/jesopan-/data/data_base/* && \
+		echo "successfully removed all contents from /home/jesopan-/data/data_base"; \
+	fi;
+
+re: fclean all
+
+ls:
+	sudo docker image ls
+	sudo docker ps
+
+.PHONY: all clean fclean re ls
