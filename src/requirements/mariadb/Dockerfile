@@ -9,8 +9,8 @@ ARG DB_PASSWORD=${DB_PASSWORD}
 ARG DB_ROOT_PASSWORD={DB_ROOT_PASSWORD}
 
 # Install MariaDB in a single RUN statement for caching and size optimization
-RUN apt-get update && \
-    apt-get install -y mariadb-server && \
+RUN apt-get update && apt-get install \
+    mariadb-server -y && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy custom MariaDB configuration
@@ -19,7 +19,7 @@ COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d
 
 # Copy initialization script
 COPY tools/mariadb.sh /
-RUN bash /mariadb.sh
+RUN bash ./mariadb.sh
 
 # Set command to run the MariaDB entrypoint script
 RUN rm -rf mariadb.sh

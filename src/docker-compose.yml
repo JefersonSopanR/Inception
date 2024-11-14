@@ -42,14 +42,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/jesopan-/data/data_base
       o: bind
+      device: /home/jesopan-/data/data_base
   wordpress_data:
     driver: local
     driver_opts:
       type: none
-      device: /home/jesopan-/data/wordpress_data
       o: bind
+      device: /home/jesopan-/data/wordpress_data
 
 networks:
   inception:

@@ -3,7 +3,8 @@ FROM debian:buster
 EXPOSE 9000
 
 RUN apt-get update  && apt-get install -y \
-    php7.3-fpm php7.3-mysql mariadb-client curl && \
+    php7.3-fpm php7.3-mysql mariadb-client \
+    curl && \
 	rm -rf /var/lib/apt/lists/*
 
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
@@ -19,7 +20,7 @@ RUN curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 RUN chmod +x ./usr/bin/wp && \
     mkdir -p /run/php
 
-COPY ./tools/wp_install.sh /var/www/html/wordpress/wp_install.sh
-RUN chmod +x /var/www/html/wordpress/wp_install.sh
+COPY ./tools/wp_install.sh /var/www/wordpress/wp_install.sh
+RUN chmod +x /var/www/wordpress/wp_install.sh
 
-CMD ["bash", "/var/www/html/wordpress/wp_install.sh"]
+CMD ["bash", "/var/www/wordpress/wp_install.sh"]
