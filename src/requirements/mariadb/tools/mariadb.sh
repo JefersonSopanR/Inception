@@ -1,6 +1,3 @@
-#!/bin/bash
-
-# Start MariaDB service to perform initialization
 service mysql start
 
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
