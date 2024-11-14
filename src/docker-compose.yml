@@ -5,8 +5,7 @@ services:
     container_name: mariadb
     build: ./requirements/mariadb
     restart: always
-    env_file:
-      - .env
+    env_file: .env
     volumes:
       - data_base:/var/lib/mysql
     networks:
@@ -15,8 +14,7 @@ services:
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
-    env_file:
-      - .env
+    env_file: .env
     volumes:
       - wordpress_data:/var/www/html/wordpress
     networks:
