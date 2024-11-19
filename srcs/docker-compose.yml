@@ -11,7 +11,7 @@ services:
     ports:
       - 443:443
     networks:
-      - my-network
+      - network
 
   wordpress:
     container_name: wordpress
@@ -23,7 +23,7 @@ services:
     env_file:
       - .env
     networks:
-      - my-network
+      - network
 
   mariadb:
     container_name: mariadb
@@ -35,10 +35,10 @@ services:
     env_file:
       - .env
     networks:
-      - my-network
+      - network
 
 networks: 
-  my-network:
+  network:
     driver: bridge
 
 volumes:
