@@ -1,26 +1,11 @@
-all: 
-	@sudo sh -c "echo '127.0.0.1 jesopan-.42.fr' >> /etc/hosts" && echo "successfully added jesopan-.42.fr to /etc/hosts"
-	sudo docker compose -f ./srcs/docker-compose.yml up -d
+all:
+	@mkdir -p /home/jesopan-/data/wordpress
+	@mkdir -p /home/jesopan-/data/mariadb
+	@docker-compose -f ./srcs/docker-compose.yml up -d --build
 
-clean:
-	sudo docker compose -f ./srcs/docker-compose.yml down --rmi all -v
+down:
+	@docker-compose -f ./srcs/docker-compose.yml down
 
-fclean: clean
-	@sudo sed -i '/127.0.0.1 jesopan-.42.fr/d' /etc/hosts && echo "successfully removed jesopan-.42.fr from /etc/hosts"
-	@if [ -d "/home/jesopan-/data/wordpress_data" ]; then \
-		sudo rm -rf /home/jesopan-/data/wordpress_data/* && \
-		echo "successfully removed all contents from /home/jesopan-/data/wordpress_data"; \
-	fi;
+re: down all
 
-	@if [ -d "/home/jesopan-/data/data_base" ]; then \
-		sudo rm -rf /home/jesopan-/data/data_base/* && \
-		echo "successfully removed all contents from /home/jesopan-/data/data_base"; \
-	fi;
-
-re: fclean all
-
-ls:
-	sudo docker image ls
-	sudo docker ps
-
-.PHONY: all clean fclean re ls
+.PHONY: all down re
