@@ -1,11 +1,39 @@
-all:
-	@mkdir -p /home/jesopan-/data/wordpress
-	@mkdir -p /home/jesopan-/data/mariadb
-	@docker-compose -f ./srcs/docker-compose.yml up -d --build
+# Path to your docker-compose.yml file
+DOCKER_COMPOSE = srcs/docker-compose.yml
 
+# Default target to start everything
+all: up
+
+# Bring up the containers in detached mode
+up:
+	@echo "Starting containers using [$(DOCKER_COMPOSE)]"
+	docker-compose -f $(DOCKER_COMPOSE) up -d
+
+# Bring everything down, remove volumes and orphans, but leave images intact
 down:
-	@docker-compose -f ./srcs/docker-compose.yml down
+	@echo "Stopping containers and removing volumes [$(DOCKER_COMPOSE)]"
+	docker-compose -f $(DOCKER_COMPOSE) down -v
 
-re: down all
+# Completely remove containers, images, volumes, and orphans
+down-all:
+	@echo "Stopping and cleaning everything [$(DOCKER_COMPOSE)]"
+	docker-compose -f $(DOCKER_COMPOSE) down -v --remove-orphans --rmi all
 
-.PHONY: all down re
+# Rebuild images and restart containers
+re-img:
+	@echo "Rebuilding images and restarting containers [$(DOCKER_COMPOSE)]"
+	docker-compose -f $(DOCKER_COMPOSE) up -d --build
+
+# Clean up unused Docker resources
+clean-cache:
+	@echo "Cleaning Docker cache"
+	docker system prune -a -f
+
+# Shortcut to restart containers without rebuilding images
+re:
+	@echo "Restarting containers without rebuilding images"
+	make down
+	make up
+
+# Mark targets as not corresponding to actual files
+.PHONY: all up down down-all re-img clean-cache re

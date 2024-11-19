@@ -1,12 +1,21 @@
 FROM debian:bullseye
 
-RUN apt-get update && apt-get install -y nginx openssl && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install NGINX and OpenSSL
+RUN apt-get update && apt-get install -y nginx openssl
 
-COPY ./conf/default /etc/nginx/sites-available/default
+# Create SSL directory and generate self-signed certificate
+RUN mkdir -p /etc/nginx/ssl
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/nginx/ssl/nginx-ssl.key \
+    -out /etc/nginx/ssl/nginx-ssl.crt \
+    -subj "/C=Spain/ST=Malaga/L=Malaga/O=Malaga42/OU=/CN=jesopan-42.fr"
 
-WORKDIR /workspace
-COPY ./tools/installer.sh .
-RUN chmod +x installer.sh
+# Copy custom NGINX configuration
+COPY ./conf /etc/nginx/sites-available/
+RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 
-CMD ["./installer.sh"]
+# Expose HTTPS port
+EXPOSE 443
+
+# Start NGINX
+CMD ["nginx", "-g", "daemon off;"]

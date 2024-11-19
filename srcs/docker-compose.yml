@@ -1,62 +1,58 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  mariadb:
-    build: ./requirements/mariadb/.
-    image: mariadb:custom
-    container_name: mariadb
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    image: nginx-img
     restart: always
-    env_file:
-      - .env
-    volumes:
-      - mariadb_data:/var/lib/mysql
+    volumes: 
+      - wp-volume:/var/www/wordpress
+    ports:
+      - 443:443
     networks:
-      - inception
+      - my-network
 
   wordpress:
-    build: ./requirements/wordpress/.
-    image: wordpress:custom
     container_name: wordpress
+    build: ./requirements/wordpress
+    image: wordpress-img
     restart: always
+    volumes: 
+      - wp-volume:/var/www/wordpress
     env_file:
       - .env
-    volumes:
-      - wordpress_data:/var/www/html
     networks:
-      - inception
-    depends_on:
-      - mariadb
+      - my-network
 
-  nginx:
-    build: ./requirements/nginx/.
-    image: nginx:custom
-    container_name: nginx
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    image: mariadb-img
     restart: always
-    ports:
-      - "443:443"
-    volumes:
-      - wordpress_data:/var/www/html
-    networks:
-      - inception
-    depends_on:
-      - wordpress
+    volumes: 
+      - db-volume:/var/lib/mysql
     env_file:
       - .env
+    networks:
+      - my-network
+
+networks: 
+  my-network:
+    driver: bridge
 
 volumes:
-  mariadb_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/jesopan-/data/mariadb
-      o: bind
-  wordpress_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/jesopan-/data/wordpress
-      o: bind
-
-networks:
-  inception:
-    driver: bridge
+  wp-volume:
+      name: wp-volume
+      driver: local
+      driver_opts:
+          type: none
+          device: /home/jesopan-/data/wordpress
+          o: bind
+  db-volume:
+      name: db-volume
+      driver: local
+      driver_opts:
+          type: none
+          device: /home/jesopan-/data/mariadb
+          o: bind

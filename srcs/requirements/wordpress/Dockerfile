@@ -1,16 +1,23 @@
 FROM debian:bullseye
 
-# Install PHP and necessary modules
-RUN apt-get update && apt-get install -y \
-    php php7.4-fpm php-mysqli wget && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install necessary packages
+RUN apt-get update -y && apt-get install -y curl php-fpm php-mysql mariadb-client
 
-# Copy configuration and setup files
-COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
-COPY ./tools/installer.sh /usr/local/bin/
+# Prepare necessary directories
+RUN mkdir -p /run/php/ /var/www/wordpress
+WORKDIR /var/www/
 
-# Set script permissions
-RUN chmod +x /usr/local/bin/installer.sh
+# Download WP-CLI
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 
-# Run the installer script
-CMD ["installer.sh"]
+# Copy configuration and scripts
+COPY ./tools/wp_install.sh /opt/wp_install.sh
+COPY ./config/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/wordpress
+
+EXPOSE 9000
+
+ENTRYPOINT ["bash", "/opt/wp_install.sh"]
