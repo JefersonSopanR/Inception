@@ -1,5 +1,3 @@
-set -e  # Stop on first error
-
 if [ -d "/var/www/wordpress/wp-admin" ]; then
     echo "WordPress core is already downloaded."
 else
