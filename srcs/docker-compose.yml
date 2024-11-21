@@ -6,7 +6,7 @@ services:
   nginx:
     container_name: nginx
     build: ./requirements/nginx
-    image: nginx
+    image: my_nginx-image
     restart: always
     volumes: 
       - wordpress-volume:/var/www/wordpress
@@ -21,7 +21,7 @@ services:
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
-    image: wordpress
+    image: my_wordpress-image
     restart: always
     volumes: 
       - wordpress-volume:/var/www/wordpress
@@ -36,7 +36,7 @@ services:
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
-    image: mariadb
+    image: my_mariadb-image
     restart: always
     volumes: 
       - mariadb-volume:/var/lib/mysql
