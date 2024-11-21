@@ -14,6 +14,8 @@ services:
       - 443:443
     networks:
       - my-network
+    depends_on:
+      - my-wordpress
 
 #### Wordpress ####
   my-wordpress:
@@ -27,6 +29,8 @@ services:
       - .env
     networks:
       - my-network
+    depends_on:
+      - my-mariadb
 
 #### Mariadb ####
   my-mariadb:
@@ -36,12 +40,8 @@ services:
     restart: always
     volumes: 
       - mariadb-volume:/var/lib/mysql
-    environment:
-      - MARIADB_DB_NAME=$MARIADB_DB_NAME
-      - MARIADB_ROOT=$MARIADB_ROOT
-      - MARIADB_USER=$MARIADB_USER
-      - MARIADB_USER_PASSWORD=$MARIADB_USER_PASSWORD
-      - MARIADB_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD
+    env_file:
+      - .env
     networks:
       - my-network
 
