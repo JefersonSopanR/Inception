@@ -1,5 +1,5 @@
 mysql_install_db
-# sleep 3
+
 service mariadb start;
 
 mysql --verbose -u ${MARIADB_ROOT} -e "ALTER USER '${MARIADB_ROOT}'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}'; FLUSH PRIVILEGES;"
@@ -7,9 +7,8 @@ mysql --verbose -u ${MARIADB_ROOT} -e "ALTER USER '${MARIADB_ROOT}'@'localhost' 
 DB_EXISTS=$(mysql -u ${MARIADB_ROOT} -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES LIKE '${MYSQL_DATABASE}';" | grep ${MYSQL_DATABASE})
 
 if [ -n "$DB_EXISTS" ]; then
-	echo "Mariadb $MYSQL_DATABASE database exists."
+	echo "Mariadb $MYSQL_DATABASE database already exists"
 else
-	echo "Mariadb $MYSQL_DATABASE database does not exist."
 	mysql --verbose -u ${MARIADB_ROOT} -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE $MYSQL_DATABASE; FLUSH PRIVILEGES;"
 	mysql  --verbose -u ${MARIADB_ROOT} -p${MYSQL_ROOT_PASSWORD} -e "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_USER_PASSWORD'; FLUSH PRIVILEGES;"
 	mysql  --verbose -u ${MARIADB_ROOT} -p${MYSQL_ROOT_PASSWORD} -e "ALTER USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_USER_PASSWORD}'; FLUSH PRIVILEGES;"
