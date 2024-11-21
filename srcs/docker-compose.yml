@@ -1,56 +1,66 @@
 version: "3.8"
 
+########## SERVICES ##########
 services:
-  nginx:
+#### Nginx ####
+  my-nginx:
     container_name: nginx
     build: ./requirements/nginx
-    image: nginx-img
+    image: my-nginx-img
     restart: always
     volumes: 
-      - wp-volume:/var/www/wordpress
+      - wordpress-volume:/var/www/wordpress
     ports:
       - 443:443
     networks:
-      - network
+      - my-network
 
-  wordpress:
+#### Wordpress ####
+  my-wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
-    image: wordpress-img
+    image: my-wordpress-img
     restart: always
     volumes: 
-      - wp-volume:/var/www/wordpress
+      - wordpress-volume:/var/www/wordpress
     env_file:
       - .env
     networks:
-      - network
+      - my-network
 
-  mariadb:
+#### Mariadb ####
+  my-mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
-    image: mariadb-img
+    image: my-mariadb-img
     restart: always
     volumes: 
-      - db-volume:/var/lib/mysql
-    env_file:
-      - .env
+      - mariadb-volume:/var/lib/mysql
+    environment:
+      - MARIADB_DB_NAME=$MARIADB_DB_NAME
+      - MARIADB_ROOT=$MARIADB_ROOT
+      - MARIADB_USER=$MARIADB_USER
+      - MARIADB_USER_PASSWORD=$MARIADB_USER_PASSWORD
+      - MARIADB_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD
     networks:
-      - network
+      - my-network
 
+########## NETWORK ##########
 networks: 
-  network:
+  my-network:
     driver: bridge
 
+########## VOLUMES ##########
 volumes:
-  wp-volume:
-      name: wp-volume
+  wordpress-volume:
+      name: wordpress-volume
       driver: local
       driver_opts:
           type: none
           device: /home/jesopan-/data/wordpress
           o: bind
-  db-volume:
-      name: db-volume
+  mariadb-volume:
+      name: mariadb-volume
       driver: local
       driver_opts:
           type: none
