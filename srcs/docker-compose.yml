@@ -3,10 +3,10 @@ version: "3.8"
 ########## SERVICES ##########
 services:
 #### Nginx ####
-  my-nginx:
+  nginx:
     container_name: nginx
     build: ./requirements/nginx
-    image: my-nginx-img
+    image: nginx
     restart: always
     volumes: 
       - wordpress-volume:/var/www/wordpress
@@ -15,13 +15,13 @@ services:
     networks:
       - my-network
     depends_on:
-      - my-wordpress
+      - wordpress
 
 #### Wordpress ####
-  my-wordpress:
+  wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
-    image: my-wordpress-img
+    image: wordpress
     restart: always
     volumes: 
       - wordpress-volume:/var/www/wordpress
@@ -30,13 +30,13 @@ services:
     networks:
       - my-network
     depends_on:
-      - my-mariadb
+      - mariadb
 
 #### Mariadb ####
-  my-mariadb:
+  mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
-    image: my-mariadb-img
+    image: mariadb
     restart: always
     volumes: 
       - mariadb-volume:/var/lib/mysql

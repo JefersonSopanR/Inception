@@ -32,7 +32,7 @@ server {
         #       # With php7.0-cgi alone:
         #        192.168.240.2:9000;
         #       # With php7.0-fpm:
-                fastcgi_pass my-wordpress:9000;
+                fastcgi_pass wordpress:9000;
                 fastcgi_index index.php;
                 include fastcgi.conf;
         }
