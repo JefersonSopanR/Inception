@@ -11,7 +11,17 @@ all: up
 up:
 	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) up -d --build
 
-# Bring down the containers
+# Stop the containers (but keep them for restarting later)
+.PHONY: stop
+stop:
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) stop
+
+# Start the stopped containers (without rebuilding)
+.PHONY: start
+start:
+	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) start
+
+# Bring down the containers (remove containers, networks, etc.)
 .PHONY: down
 down:
 	$(DOCKER_COMPOSE) -f $(COMPOSE_FILE) down
@@ -43,4 +53,3 @@ fclean:
 # Rebuild the containers
 .PHONY: re
 re: fclean up
-
